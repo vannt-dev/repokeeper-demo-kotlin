@@ -1,0 +1,24 @@
+# Managed by repokeeper (https://github.com/vannt-dev/repokeeper). Edits are reported by `repokeeper check`. Keys and jobs you add yourself are left alone.
+
+name: ci
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+permissions:
+  contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+jobs:
+  commits:
+    uses: vannt-dev/repokeeper/.github/workflows/commitlint.yml@v0
+  kotlin:
+    uses: vannt-dev/repokeeper/.github/workflows/stack-java.yml@v0
+    with:
+      java-versions: '["17","21"]'
+      os: '["ubuntu-latest"]'
+      build-tool: gradle
+      gradle-version: current
+      commands: '["gradle check"]'
