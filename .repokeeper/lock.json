@@ -1,6 +1,6 @@
 {
   "lockVersion": 1,
-  "standard": "1.4.1",
+  "standard": "1.4.3",
   "entries": [
     {
       "id": "block:.gitattributes#editorconfig",
@@ -148,6 +148,16 @@
       "target": {
         "kind": "file",
         "path": "SECURITY.md"
+      }
+    },
+    {
+      "id": "marker:gradle.properties",
+      "module": "release",
+      "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "target": {
+        "kind": "marker",
+        "path": "gradle.properties",
+        "line": "^version\\s*="
       }
     },
     {
