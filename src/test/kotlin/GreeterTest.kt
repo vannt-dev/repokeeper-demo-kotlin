@@ -6,4 +6,9 @@ class GreeterTest {
     fun greetsByName() {
         assertEquals("Hello, Ada!", greet("Ada"))
     }
+
+    @Test
+    fun ignoresSpacesAroundTheName() {
+        assertEquals("Hello, Ada!", greet("  Ada "))
+    }
 }
