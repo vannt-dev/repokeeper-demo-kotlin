@@ -15,6 +15,8 @@ jobs:
   commits:
     uses: vannt-dev/repokeeper/.github/workflows/commitlint.yml@v0
   kotlin:
+    needs: changes
+    if: ${{ !cancelled() && needs.changes.outputs.code != 'false' }}
     uses: vannt-dev/repokeeper/.github/workflows/stack-java.yml@v0
     with:
       java-versions: '["17","21"]'
@@ -22,3 +24,22 @@ jobs:
       build-tool: gradle
       gradle-version: current
       commands: '["gradle check"]'
+  changes:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      code: ${{ steps.files.outputs.code }}
+    steps:
+      - id: files
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT: ${{ github.event_name }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          code=true
+          if [ "$EVENT" = pull_request ] && files=$(gh api --paginate "repos/$GITHUB_REPOSITORY/pulls/$PR/files" --jq '.[].filename'); then
+            printf '%s\n' "$files"
+            if [ -n "$files" ] && ! printf '%s\n' "$files" | grep -Evq '^([^/]*\.md|docs/.*|LICENSE)$'; then code=false; fi
+          fi
+          echo "code=$code" >> "$GITHUB_OUTPUT"
